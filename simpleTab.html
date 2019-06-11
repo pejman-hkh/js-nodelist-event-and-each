@@ -10,7 +10,7 @@
 
 <ul class="mytabs">
 	<li data-target="#tab1"><a href="#">test1</a></li>
-	<li data-target="#tab2"><a href="#">test1</a></li>
+	<li data-target="#tab2"><a href="#">test2</a></li>
 </ul>
 <div class="tab-content">
 	<div id="tab1" class="active">
@@ -27,6 +27,7 @@ NodeList.prototype.each = function( callback ) {
 	this.forEach(function( elm, index ) {
 		callback.call(elm, elm, index );
 	});
+	return this;
 };
 
 ["focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ].forEach(function( name, index ) {
@@ -35,10 +36,12 @@ NodeList.prototype.each = function( callback ) {
 		this.forEach(function( elm, index ) {
 			elm.addEventListener( name, callback );
 		});
+		return this;
 	}
 
 	HTMLLIElement.prototype[name] = function( callback ) {
 		this.addEventListener( name, callback );
+		return this;
 	}
 });
 
@@ -59,6 +62,8 @@ qsa('.mytabs > li').click(function() {
     var cDiv = qs('.tab-content '+this.dataset.target+'');
     qs('.tab-content > div.active').classList.remove('active');
     cDiv.classList.add('active');
+}).each(function() {
+	alert(this.innerHTML);
 });
 
 </script>
