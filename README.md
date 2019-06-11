@@ -1,4 +1,4 @@
-# js-nodelist-event-and-each
+# JS NodeList Add Events And Each Functions
 Add each function and all events to javascript NodeList
 
 
