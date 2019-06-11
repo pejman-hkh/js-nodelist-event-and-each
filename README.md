@@ -1,19 +1,17 @@
-# JS NodeList Add Events And Each Functions
+# JS NodeList
 Add each function and all events to javascript NodeList
 
 
 # Usage Example
-`qsa = document.querySelectorAll` and `qs = document.querySelector`
+
 
 ```js
-qs('.mytabs > li').click(function() {
-	alert('test1');
-});
+$('.mytabs > li').click(function() {
+	$(this).data('aaa', 'bbbb');
 
+	console.log( $(this).data('aaa') );
 
-qsa('.mytabs > li').click(function() {
-    var cDiv = qs('.tab-content '+this.dataset.target+'');
-    qs('.tab-content > div.active').classList.remove('active');
-    cDiv.classList.add('active');
-});
+    $('.tab-content > div.active').removeClass('active');
+    $('.tab-content '+this.dataset.target+'').addClass('active');
+})
 ````
