@@ -36,9 +36,14 @@ NodeList.prototype.each = function( callback ) {
 			elm.addEventListener( name, callback );
 		});
 	}
+
+	HTMLLIElement.prototype[name] = function( callback ) {
+		this.addEventListener( name, callback );
+	}
 });
 
-function $( selector ) {
+
+function qsa( selector ) {
 	return document.querySelectorAll( selector );
 }
 
@@ -46,7 +51,11 @@ function qs( selector ) {
 	return document.querySelector(selector);
 }
 
-$('.mytabs > li').click(function() {
+qs('.mytabs > li').click(function() {
+	alert('test1');
+});
+
+qsa('.mytabs > li').click(function() {
     var cDiv = qs('.tab-content '+this.dataset.target+'');
     qs('.tab-content > div.active').classList.remove('active');
     cDiv.classList.add('active');
