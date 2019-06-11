@@ -1,0 +1,55 @@
+<style type="text/css">
+	.tab-content div {
+		display: none;
+	}
+
+	.tab-content .active {
+		display: block;
+	}
+</style>
+
+<ul class="mytabs">
+	<li data-target="#tab1"><a href="#">test1</a></li>
+	<li data-target="#tab2"><a href="#">test1</a></li>
+</ul>
+<div class="tab-content">
+	<div id="tab1" class="active">
+		test1
+	</div>
+
+	<div id="tab2">
+		test2
+	</div>
+</div>
+
+<script>
+NodeList.prototype.each = function( callback ) {
+	this.forEach(function( elm, index ) {
+		callback.call(elm, elm, index );
+	});
+};
+
+["focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ].forEach(function( name, index ) {
+
+	NodeList.prototype[ name ] = function( callback ) {
+		this.forEach(function( elm, index ) {
+			elm.addEventListener( name, callback );
+		});
+	}
+});
+
+function $( selector ) {
+	return document.querySelectorAll( selector );
+}
+
+function qs( selector ) {
+	return document.querySelector(selector);
+}
+
+$('.mytabs > li').click(function() {
+    var cDiv = qs('.tab-content '+this.dataset.target+'');
+    qs('.tab-content > div.active').classList.remove('active');
+    cDiv.classList.add('active');
+});
+
+</script>
