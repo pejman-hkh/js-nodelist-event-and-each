@@ -6,12 +6,12 @@ Add each function and all events to javascript NodeList
 
 
 ```js
-$('.mytabs > li').click(function() {
+document.querySelectorAll('.mytabs > li').click(function() {
 	$(this).data('aaa', 'bbbb');
 
 	console.log( $(this).data('aaa') );
 
-    $('.tab-content > div.active').removeClass('active');
-    $('.tab-content '+this.dataset.target+'').addClass('active');
+    document.querySelectorAll('.tab-content > div.active').removeClass('active');
+    document.querySelectorAll('.tab-content '+this.dataset.target+'').addClass('active');
 })
 ````
