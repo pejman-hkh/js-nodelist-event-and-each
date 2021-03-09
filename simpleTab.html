@@ -1,12 +1,22 @@
-<style type="text/css">
-	.tab-content div {
-		display: none;
-	}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>NodeList</title>
 
-	.tab-content .active {
-		display: block;
-	}
-</style>
+	<style type="text/css">
+		.tab-content div {
+			display: none;
+		}
+
+		.tab-content .active {
+			display: block;
+		}
+	</style>
+
+	<script src="nodelist.js"></script>
+
+</head>
+<body>
 
 <ul class="mytabs">
 	<li data-target="#tab1"><a href="#">test1</a></li>
@@ -23,110 +33,42 @@
 </div>
 
 <script>
-(function( window ) {
-	NodeList.prototype.each = function( callback ) {
-		this.forEach(function( elm, index ) {
-			callback.call(elm, elm, index );
-		});
-		return this;
-	};
-
-	["focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ].forEach(function( name, index ) {
-
-		NodeList.prototype[ name ] = function( callback ) {
-			this.forEach(function( elm, index ) {
-				elm.addEventListener( name, callback );
-			});
-			return this;
-		}
-
-	});
-
-	NodeList.prototype.item = function item(i) {
-	    return this[+i || 0];
-	};
-
-	function _nodeList( arr ) {
-		return Reflect.construct(Array, arr, NodeList)
-	}
-
-	function $( selector ) {
-		if( typeof selector == 'object' ) {
-			return _nodeList( [ selector ] );
-		}
-
-		return document.querySelectorAll( selector );
-	}
-
-	window.$ = $;
-	window._nodeList = _nodeList;
-
-})( window );
 
 
-NodeList.prototype.find = function( val ) {
-	var nl = [];
-	this.each(function() {
-		var pselect = this.querySelectorAll(val);
-		for( var x in pselect ) {
-			if( typeof pselect[x] === 'object' )
-				nl.push(pselect[x]);
-		}
-	});
-	return _nodeList(nl);
-};
+/*
+You can use document.querySelectorAll or $, Both of them works
 
-NodeList.prototype.attr = function( key, val ){
-	if( typeof val === 'undefined' ) {
-		return this.getAttribute( key );
-	} else {
-		return this.each(function() {
-			this.setAttribute( key, value );
-		});
-	}
-};
+document.querySelectorAll('.mytabs > li').click(function() {
+	document.querySelectorAll(this).data('aaa', 'bbbb');
+	console.dir(  document.querySelectorAll(this).data('aaa', 'bbb') );
 
-NodeList.prototype.html = function( val ) {
-	if( typeof val === 'undefined' ) {
-		return this[0].innerHTML;
-	}
+	console.log( document.querySelectorAll(this).data('aaa') );
 
-	return this.each(function() {
-		this.innerHTML = val
-	});
-}
-
-NodeList.prototype.addClass = function( name ) {
-	return this.each(function() {
-		this.classList.add( name );
-	});
-}
-
-NodeList.prototype.removeClass = function( name ) {
-	return this.each(function() {
-		this.classList.remove( name );
-	});
-}
-
-
-NodeList.prototype.data = function( key, val ) {
-	if( typeof val === 'undefined' ) {
-		return this[0].dataset[key];
-	}
-
-	return this.each(function() {
-		this.dataset[key] = val
-	});
-}
+   	document.querySelectorAll('.tab-content > div.active').each(function() {
+    	console.log( this );
+    }).removeClass('active');
+    document.querySelectorAll('.tab-content '+this.dataset.target+'').addClass('active');
+})*/
 
 
 $('.mytabs > li').click(function() {
 	$(this).data('aaa', 'bbbb');
+	console.dir(  $(this).data('aaa', 'bbb') );
 
 	console.log( $(this).data('aaa') );
 
-    $('.tab-content > div.active').removeClass('active');
+   	$('.tab-content > div.active').each(function() {
+    	console.log( this );
+    }).removeClass('active');
     $('.tab-content '+this.dataset.target+'').addClass('active');
 })
 
+
+
 </script>
+
+</body>
+</html>
+
+
+
