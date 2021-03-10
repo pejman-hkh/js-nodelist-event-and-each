@@ -18,9 +18,7 @@
 		return document.querySelectorAllA( selector );
 	}
 
-
 	document.querySelectorAll = $;
-
 
 	window.$ = $;
 	window._nodeList = _nodeList;
