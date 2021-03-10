@@ -19,9 +19,7 @@
 	}
 
 
-	document.querySelectorAll = function( a ) {
-		return $( a );
-	}
+	document.querySelectorAll = $;
 
 
 	window.$ = $;
