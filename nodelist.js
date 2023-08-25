@@ -1,29 +1,26 @@
-(function( window ) {
+//https://github.com/pejman-hkh/nodelist/
+NodeList = window.NodeList;
 
-	NodeList.prototype.item = function item(i) {
-	    return this[+i || 0];
-	};
+NodeList.prototype.item = function item(i) {
+    return this[+i || 0];
+};
 
-	function _nodeList( arr ) {
-		return Reflect.construct(Array, arr, NodeList)
+function _nodeList( arr ) {
+	return Reflect.construct(Array, arr, NodeList)
+}
+
+document.querySelectorAllA = document.querySelectorAll;
+
+function $( selector ) {
+	if( typeof selector == 'object' ) {
+		return _nodeList( [ selector ] );
 	}
 
-	document.querySelectorAllA = document.querySelectorAll;
+	return document.querySelectorAllA( selector );
+}
 
-	function $( selector ) {
-		if( typeof selector == 'object' ) {
-			return _nodeList( [ selector ] );
-		}
-
-		return document.querySelectorAllA( selector );
-	}
-
-	document.querySelectorAll = $;
-
-	window.$ = $;
-	window._nodeList = _nodeList;
-
-})( window );
+window.$ = $;
+window._nodeList = _nodeList;
 
 NodeList.prototype.each = function( callback ) {
 	this.forEach(function( elm, index ) {
@@ -43,6 +40,13 @@ NodeList.prototype.each = function( callback ) {
 
 });
 
+NodeList.prototype.prev = function() {
+	return _nodeList( [ this[0].previousElementSibling ] );
+}
+
+NodeList.prototype.next = function() {
+	return _nodeList( [ this[0].nextElementSibling ] );
+}
 
 NodeList.prototype.find = function( val ) {
 	var nl = [];
@@ -56,9 +60,10 @@ NodeList.prototype.find = function( val ) {
 	return _nodeList(nl);
 };
 
-NodeList.prototype.attr = function( key, val ){
-	if( typeof val === 'undefined' ) {
-		return this.getAttribute( key );
+NodeList.prototype.attr = function( key, value ){
+	
+	if( typeof value === 'undefined' ) {
+		return this[0].getAttribute(key);
 	} else {
 		return this.each(function() {
 			this.setAttribute( key, value );
@@ -66,13 +71,23 @@ NodeList.prototype.attr = function( key, val ){
 	}
 };
 
+NodeList.prototype.val = function( val ) {
+	if( typeof val === 'undefined' ) {
+		return this[0].value;
+	}
+
+	return this.each(function() {
+		this.value = val;
+	});
+}
+
 NodeList.prototype.html = function( val ) {
 	if( typeof val === 'undefined' ) {
 		return this[0].innerHTML;
 	}
 
 	return this.each(function() {
-		this.innerHTML = val
+		this.innerHTML = val;
 	});
 }
 
@@ -90,11 +105,24 @@ NodeList.prototype.removeClass = function( name ) {
 
 
 NodeList.prototype.data = function( key, val ) {
+	if( typeof key === 'undefined' ) {
+		return this.dataset1;
+	}
+
 	if( typeof val === 'undefined' ) {
-		return this[0].dataset[key];
+		let ret;
+		this.each(function() {
+			if( typeof this.dataset1 === 'undefined' )
+				this.dataset1 = {};
+			ret = this.dataset1[key];
+		});
+
+		return ret;
 	}
 
 	return this.each(function() {
-		this.dataset[key] = val
+		if( typeof this.dataset1 === 'undefined' )
+			this.dataset1 = {};
+		this.dataset1[key] = val
 	});
 }
