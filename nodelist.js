@@ -1,128 +1,135 @@
 //https://github.com/pejman-hkh/nodelist/
-NodeList = window.NodeList;
+(function(window) {
 
-NodeList.prototype.item = function item(i) {
-    return this[+i || 0];
-};
+	NodeList = window.NodeList;
 
-function _nodeList( arr ) {
-	return Reflect.construct(Array, arr, NodeList)
-}
+	NodeList.prototype.item = function item(i) {
+	    return this[+i || 0];
+	};
 
-document.querySelectorAllA = document.querySelectorAll;
-
-function $( selector ) {
-	if( typeof selector == 'object' ) {
-		return _nodeList( [ selector ] );
+	function _nodeList( arr ) {
+		return Reflect.construct(Array, arr, NodeList)
 	}
 
-	return document.querySelectorAllA( selector );
-}
+	document.querySelectorAllA = document.querySelectorAll;
 
-window.$ = $;
-window._nodeList = _nodeList;
+	function $( selector ) {
+		if( typeof selector == 'array' ) {
+			return _nodeList( selector );
+		} else if( typeof selector == 'object' ) {
+			return _nodeList( [ selector ] );
+		}
 
-NodeList.prototype.each = function( callback ) {
-	this.forEach(function( elm, index ) {
-		callback.call(elm, elm, index );
-	});
-	return this;
-};
+		return document.querySelectorAllA( selector );
+	}
 
-["focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ].forEach(function( name, index ) {
+	window.$ = $;
+	window._nodeList = _nodeList;
+	window.document.querySelectorAll = $;
 
-	NodeList.prototype[ name ] = function( callback ) {
-		this.each(function( elm, index ) {
-			this.addEventListener( name, callback );
+	NodeList.prototype.each = function( callback ) {
+		this.forEach(function( elm, index ) {
+			callback.call(elm, elm, index );
 		});
 		return this;
+	};
+
+	["focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ].forEach(function( name, index ) {
+
+		NodeList.prototype[ name ] = function( callback ) {
+			this.each(function( elm, index ) {
+				this.addEventListener( name, callback );
+			});
+			return this;
+		}
+
+	});
+
+	NodeList.prototype.prev = function() {
+		return $( this[0].previousElementSibling );
 	}
 
-});
+	NodeList.prototype.next = function() {
+		return $( this[0].nextElementSibling );
+	}
 
-NodeList.prototype.prev = function() {
-	return _nodeList( [ this[0].previousElementSibling ] );
-}
+	NodeList.prototype.find = function( val ) {
+		var nl = [];
+		this.each(function() {
+			var pselect = this.querySelectorAll(val);
+			for( var x in pselect ) {
+				if( typeof pselect[x] === 'object' )
+					nl.push(pselect[x]);
+			}
+		});
+		return $(nl);
+	};
 
-NodeList.prototype.next = function() {
-	return _nodeList( [ this[0].nextElementSibling ] );
-}
-
-NodeList.prototype.find = function( val ) {
-	var nl = [];
-	this.each(function() {
-		var pselect = this.querySelectorAll(val);
-		for( var x in pselect ) {
-			if( typeof pselect[x] === 'object' )
-				nl.push(pselect[x]);
+	NodeList.prototype.attr = function( key, value ){
+		
+		if( typeof value === 'undefined' ) {
+			return this[0].getAttribute(key);
+		} else {
+			return this.each(function() {
+				this.setAttribute( key, value );
+			});
 		}
-	});
-	return _nodeList(nl);
-};
+	};
 
-NodeList.prototype.attr = function( key, value ){
-	
-	if( typeof value === 'undefined' ) {
-		return this[0].getAttribute(key);
-	} else {
+	NodeList.prototype.val = function( val ) {
+		if( typeof val === 'undefined' ) {
+			return this[0].value;
+		}
+
 		return this.each(function() {
-			this.setAttribute( key, value );
+			this.value = val;
 		});
 	}
-};
 
-NodeList.prototype.val = function( val ) {
-	if( typeof val === 'undefined' ) {
-		return this[0].value;
+	NodeList.prototype.html = function( val ) {
+		if( typeof val === 'undefined' ) {
+			return this[0].innerHTML;
+		}
+
+		return this.each(function() {
+			this.innerHTML = val;
+		});
 	}
 
-	return this.each(function() {
-		this.value = val;
-	});
-}
-
-NodeList.prototype.html = function( val ) {
-	if( typeof val === 'undefined' ) {
-		return this[0].innerHTML;
+	NodeList.prototype.addClass = function( name ) {
+		return this.each(function() {
+			this.classList.add( name );
+		});
 	}
 
-	return this.each(function() {
-		this.innerHTML = val;
-	});
-}
-
-NodeList.prototype.addClass = function( name ) {
-	return this.each(function() {
-		this.classList.add( name );
-	});
-}
-
-NodeList.prototype.removeClass = function( name ) {
-	return this.each(function() {
-		this.classList.remove( name );
-	});
-}
-
-
-NodeList.prototype.data = function( key, val ) {
-	if( typeof key === 'undefined' ) {
-		return this.dataset1;
+	NodeList.prototype.removeClass = function( name ) {
+		return this.each(function() {
+			this.classList.remove( name );
+		});
 	}
 
-	if( typeof val === 'undefined' ) {
-		let ret;
-		this.each(function() {
+
+	NodeList.prototype.data = function( key, val ) {
+		if( typeof key === 'undefined' ) {
+			return this.dataset1;
+		}
+
+		if( typeof val === 'undefined' ) {
+			let ret;
+			this.each(function() {
+				if( typeof this.dataset1 === 'undefined' )
+					this.dataset1 = {};
+				ret = this.dataset1[key];
+			});
+
+			return ret;
+		}
+
+		return this.each(function() {
 			if( typeof this.dataset1 === 'undefined' )
 				this.dataset1 = {};
-			ret = this.dataset1[key];
+			this.dataset1[key] = val
 		});
-
-		return ret;
 	}
 
-	return this.each(function() {
-		if( typeof this.dataset1 === 'undefined' )
-			this.dataset1 = {};
-		this.dataset1[key] = val
-	});
-}
+})( window );

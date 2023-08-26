@@ -37,12 +37,12 @@
 <script>
 
 $("#test").click(function() {
-	alert('test');
+	alert( $(this).html() );
 });
-/*
-You can use document.querySelectorAll or $, Both of them works
 
-document.querySelectorAll('.mytabs > li').click(function() {
+//You can use document.querySelectorAll or $, Both of them works
+
+/*document.querySelectorAll('.mytabs > li').click(function() {
 	document.querySelectorAll(this).data('aaa', 'bbbb');
 	console.dir(  document.querySelectorAll(this).data('aaa', 'bbb') );
 
@@ -67,7 +67,7 @@ $('.mytabs > li').click(function() {
     $('.tab-content '+this.dataset.target+'').addClass('active');
 })
 
-
+$("#test").html('This is test')
 
 </script>
 
